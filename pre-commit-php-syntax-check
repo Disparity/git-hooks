@@ -1,0 +1,5 @@
+#!/bin/bash
+
+for i in $(git status --porcelain|grep .php|sed -e 's/^. *//'); do
+    php -l ${i} | grep 'No syntax errors detected in' > /dev/null || exit -1
+done

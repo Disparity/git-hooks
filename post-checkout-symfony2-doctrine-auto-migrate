@@ -1,0 +1,23 @@
+#!/bin/bash
+#
+# Rolls back the absence of migration and migrate
+#
+# @author Disparity <disparity-github@yandex.ru>
+# @site https://github.com/Disparity/git-hooks
+
+if [ "$1" == "$2" ]; then exit 0; fi
+
+cd `app/console debug:container --parameter=doctrine_migrations.dir_name -n` && cd - > /dev/null #fix mingw + php realpath + git issue
+
+for i in $(git diff --name-only --diff-filter=AM $2 $1 -- ${OLDPWD}|sort -r); do
+    git checkout $1 -- ${i} && git reset ${i}
+    migration=`echo ${i} | sed -e 's/.*[^0-9]\([0-9]*\)\.php$/\1/'`
+
+    ( app/console doctrine:migration:status --no-ansi --show-versions | grep $migration | grep -Eq '^.*[0-9]\) *migrated *$' > /dev/null ) &&
+        app/console doctrine:migration:execute --no-ansi --down $migration -n > /dev/null &&
+        echo Reverted version $migration || echo Reverted version $migration failed
+    rm ${i}
+done
+
+(app/console doctrine:migration:status --show-versions -n --no-ansi|grep 'not migrated' > /dev/null) &&
+    app/console doctrine:migration:migrate --no-ansi -n|grep '++ migrating'|sed -e 's/.*[^0-9]\([0-9]*\)/Migrated version \1/' || echo Migration failed

@@ -1,0 +1,3 @@
+#!/bin/sh
+
+find `git rev-parse --git-dir`/hooks -type f -perm +111 -name `basename $0`-* \( -exec {} $1 $2 $3 \; -o -exec exit -1 \; \)
