@@ -1,3 +1,8 @@
-#!/bin/sh
+#!/bin/bash
+#
+# @author Disparity <disparity-github@yandex.ru>
+# @site https://github.com/Disparity/git-hooks
 
-find `git rev-parse --git-dir`/hooks -type f -perm +111 -name `basename $0`-* \( -exec {} $1 $2 $3 \; -o -exec exit -1 \; \)
+for i in $(find `git rev-parse --git-dir`/hooks -type f -perm +111 -name `basename $0`-* -print); do
+    ${i} $1 $2 $3 || exit -1
+done

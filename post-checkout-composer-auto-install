@@ -1,0 +1,11 @@
+#!/bin/bash
+#
+# Auto install composer dependencies when composer.json/composer.lock is changed
+#
+# @author Disparity <disparity-github@yandex.ru>
+# @site https://github.com/Disparity/git-hooks
+
+if [ "$1" == "$2" ]; then exit 0; fi
+
+git diff --name-only --diff-filter=AM $2 $1 -- composer.json composer.lock|grep composer > /dev/null &&
+    ( composer install -n --no-ansi --quiet --working-dir `git rev-parse --show-toplevel` && echo Composer dependencies installed || echo Composer dependencies install failed )
