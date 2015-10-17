@@ -4,6 +4,9 @@
 #
 # @author Disparity <disparity-github@yandex.ru>
 # @site https://github.com/Disparity/git-hooks
+# @dependency git
+# @dependency php@>=5.3
+# @dependency doctrine/doctrine-migrations-bundle@~1.1
 
 if [ "$1" == "$2" ]; then exit 0; fi
 app_console="`git rev-parse --show-toplevel`/app/console --no-ansi -n"

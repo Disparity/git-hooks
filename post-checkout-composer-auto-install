@@ -4,6 +4,9 @@
 #
 # @author Disparity <disparity-github@yandex.ru>
 # @site https://github.com/Disparity/git-hooks
+# @dependency git
+# @dependency php@>=5.3
+# @dependency composer@~1.0
 
 if [ "$1" == "$2" ]; then exit 0; fi
 

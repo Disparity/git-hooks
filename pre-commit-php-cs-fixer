@@ -1,0 +1,15 @@
+#!/bin/bash
+#
+# PHP code style fixer
+#
+# @author Disparity <disparity-github@yandex.ru>
+# @site https://github.com/Disparity/git-hooks
+# @dependency git
+# @dependency php@>=5.4
+# @dependency php-cs-fixer@>=1.10.1
+
+php_cs_fixer="php-cs-fixer fix --quiet --no-interaction --level=psr2 --fixers=psr0,encoding,short_tag,double_arrow_multiline_whitespaces,duplicate_semicolon,extra_empty_lines,include,multiline_array_trailing_comma,namespace_no_leading_whitespace,new_with_braces,object_operator,operators_spaces,phpdoc_params,remove_leading_slash_use,remove_lines_between_uses,return,single_array_no_trailing_comma,ternary_spaces,unused_use,whitespacy_lines,align_double_arrow,align_equals,concat_with_spaces,multiline_spaces_before_semicolon,ordered_use,short_array_syntax,"
+
+for i in $(git diff --cached --name-only|grep .php); do
+    $php_cs_fixer ${i} && git add -- ${i} > /dev/null || exit -1
+done

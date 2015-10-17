@@ -4,6 +4,8 @@
 #
 # @author Disparity <disparity-github@yandex.ru>
 # @site https://github.com/Disparity/git-hooks
+# @dependency git
+# @dependency php
 
 for i in $(git diff --cached --name-only|grep .php); do
     php -l ${i} | grep 'No syntax errors detected in' > /dev/null || exit -1
