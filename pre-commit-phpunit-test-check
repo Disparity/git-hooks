@@ -1,0 +1,14 @@
+#!/bin/bash
+#
+# PHPUnit test checker
+#
+# @author Disparity <disparity-github@yandex.ru>
+# @site https://github.com/Disparity/git-hooks
+# @dependency git
+# @dependency php@>=5.4
+# @dependency phpunit@>=3.7
+
+git diff --diff-filter=AM --cached --name-only|grep .php > /dev/null && (
+    phpunit -c `find . -maxdepth 2 -type f -name phpunit.xml* -print` --disallow-test-output --colors=never --stop-on-failure | grep Failed && exit -1
+)
+exit 0
