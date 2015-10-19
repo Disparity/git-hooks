@@ -7,3 +7,4 @@
 for i in $(find `git rev-parse --git-dir`/hooks -type f -perm +111 -name `basename $0`-* -print); do
     ${i} $1 $2 $3 || exit -1
 done
+exit 0

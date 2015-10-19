@@ -18,11 +18,14 @@ for i in $(git diff --name-only --diff-filter=AM $2 $1 -- ${OLDPWD}|sort -r); do
     git checkout $1 -- ${i} > /dev/null && git reset ${i} > /dev/null
     migration=`echo ${i} | sed -e 's/.*[^0-9]\([0-9]*\)\.php$/\1/'`
 
-    ( $app_console doctrine:migration:status --show-versions | grep $migration | grep -Eq '^.*[0-9]\) *migrated *$' > /dev/null ) &&
+    ( $app_console doctrine:migration:status --show-versions | grep $migration | grep -Eq '^.*[0-9]\) *migrated *$' > /dev/null ) && (
         $app_console doctrine:migration:execute --quiet --down $migration &&
         echo Reverted version $migration || echo Reverted version $migration failed
+    )
     rm ${i}
 done
 
-($app_console doctrine:migration:status --show-versions|grep 'not migrated' > /dev/null) &&
+($app_console doctrine:migration:status --show-versions|grep 'not migrated' > /dev/null) && (
     $app_console doctrine:migration:migrate|grep '++ migrating'|sed -e 's/.*[^0-9]\([0-9]*\)/Migrated version \1/' || echo Migration failed
+)
+exit 0

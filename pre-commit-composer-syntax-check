@@ -1,0 +1,14 @@
+#!/bin/bash
+#
+# Composer syntax checker
+#
+# @author Disparity <disparity-github@yandex.ru>
+# @site https://github.com/Disparity/git-hooks
+# @dependency git
+# @dependency php@>=5.4
+# @dependency composer
+
+git diff --diff-filter=AM --cached --name-only|grep composer.json && (
+    composer validate --no-interaction --strict --quiet || ( echo composer.json has some errors && exit -1 )
+)
+exit 0
