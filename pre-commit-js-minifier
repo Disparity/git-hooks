@@ -1,0 +1,15 @@
+#!/bin/bash
+#
+# JS minifier
+#
+# @author Disparity <disparity-github@yandex.ru>
+# @site https://github.com/Disparity/git-hooks
+# @dependency git
+# @dependency uglifyjs
+
+minifier="uglifyjs --compress --mangle -- "
+for i in $(git diff --diff-filter=AM --cached --name-only|grep .js); do
+    file=`echo ${i} | sed -e 's/\.js/.min.js/g'`
+    if [ -e "$file" ]; then ($minifier "${i}" > "$file" && echo Minify ${i} && git add -- "$file") || exit -1; fi
+done
+exit 0
