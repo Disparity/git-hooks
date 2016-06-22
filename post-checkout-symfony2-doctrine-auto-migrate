@@ -32,6 +32,6 @@ for i in $(git diff --name-only --diff-filter=AM $2 $1 -- ${OLDPWD}|sort -r); do
 done
 
 ($app_console doctrine:migration:status --show-versions|grep 'not migrated' > /dev/null) && (
-    $app_console doctrine:migration:migrate -vvv|grep '(version)'|sed -e 's/.*\[\"\([0-9]*\)\"\]/Migrated version \1/' || echo Migration failed
+    $app_console doctrine:migration:migrate -vvv 2>&1|grep '(version)'|sed -e 's/.*\[\"\([0-9]*\)\"\]/Migrated version \1/' || echo Migration failed
 )
 exit 0

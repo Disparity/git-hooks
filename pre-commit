@@ -4,7 +4,7 @@
 # @site https://github.com/Disparity/git-hooks
 # @dependency git
 
-for i in $(find `git rev-parse --git-dir`/hooks -type f -perm +111 -name `basename $0`-* -print); do
+for i in $(find `git rev-parse --git-dir`/hooks -type f -perm /111 -name `basename $0`-* -print|sort); do
     ${i} || exit -1
 done
 exit 0
