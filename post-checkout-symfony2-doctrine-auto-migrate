@@ -9,10 +9,12 @@
 # @dependency doctrine/doctrine-migrations-bundle@~1.1
 
 if [ "$1" == "$2" ]; then exit 0; fi
-app_console="`git rev-parse --show-toplevel`/app/console --no-ansi -n"
-if [ ! -d "`$app_console debug:container --parameter=doctrine_migrations.dir_name`" ]; then exit 0; fi
+app_console="`git rev-parse --show-toplevel`/bin/console --no-ansi -n"
+migration_dir=`$app_console debug:container --parameter=doctrine_migrations.dir_name|grep doctrine_migrations.dir_name|sed -e 's/^\s*\S*\s*\(\S*\)\s*$/\1/'`
 
-cd `$app_console debug:container --parameter=doctrine_migrations.dir_name` && cd - > /dev/null #fix mingw + php realpath + git issue
+if [ ! -d "$migration_dir" ]; then exit 0; fi
+
+cd "$migration_dir" && cd - > /dev/null #fix mingw + php realpath + git issue
 
 for i in $(git diff --name-only --diff-filter=AM $2 $1 -- ${OLDPWD}|sort -r); do
     git checkout $1 -- ${i} > /dev/null && git reset ${i} > /dev/null
